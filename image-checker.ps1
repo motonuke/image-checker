@@ -17,9 +17,9 @@ else {write-host "Required Source File located - $fc." -f green}
 $vcount = 0
 $hcount = 0
 
-$tmp = "C:\Users\wnukowst\Pictures\Wallpapers\Tmp"
-$vertical = "C:\Users\wnukowst\Pictures\Wallpapers\Vertical"
-$horizontal = "C:\Users\wnukowst\Pictures\Wallpapers\Horizontal"
+$tmp = "C:\Users\USERNAME\Pictures\Wallpapers\Tmp"
+$vertical = "C:\Users\USERNAME\Pictures\Wallpapers\Vertical"
+$horizontal = "C:\Users\USERNAME\Pictures\Wallpapers\Horizontal"
 if ($args[0]) {$path = $args[0]} else {$path = $tmp}
 # $path
 write-host "Getting Image Info..." -f green
