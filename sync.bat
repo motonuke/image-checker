@@ -1,0 +1,2 @@
+REM xcopy /Y /D /E "c:\users\%username%\Pictures\Wallpapers\*" "c:\Users\%username%\Google Drive\Wallpapers\"
+robocopy "c:\users\%username%\Pictures\Wallpapers" "c:\Users\%username%\Google Drive\Wallpapers" /MIR
