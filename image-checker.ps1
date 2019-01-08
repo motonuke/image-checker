@@ -4,9 +4,9 @@ Param(
         [ValidateScript({ (Test-Path -Path $_) })]
         [String[]]$Directory
 	)
+
 # Source Files
 $procs = "Get-Images.ps1"
-
 
 #Source File Check
 write-host
@@ -23,9 +23,9 @@ else {write-host "Required Source File located - $fc." -f green}
 $vcount = 0
 $hcount = 0
 
-$tmp = "C:\Users\wnukowst\Pictures\Wallpapers\Tmp"
-$vertical = "C:\Users\wnukowst\Pictures\Wallpapers\Vertical"
-$horizontal = "C:\Users\wnukowst\Pictures\Wallpapers\Horizontal"
+$tmp = "C:\Users\{USERNAME}\Pictures\Wallpapers\Tmp"
+$vertical = "C:\Users\{USERNAME}\Pictures\Wallpapers\Vertical"
+$horizontal = "C:\Users\{USERNAME}\Pictures\Wallpapers\Horizontal"
 if ($Directory) {$path = (get-item $Directory).fullname.TrimEnd("\")} else {$path = $tmp}
 write-host "Getting Image Info..." -f green
 $images  = get-images -source $path
