@@ -1,4 +1,16 @@
-﻿#Requires -Version 4
+#Requires -Version 4
+
+function Get-Attributes {
+
+$com = (New-Object -ComObject Shell.Application).NameSpace('C:\')
+for ($index = 1; $index -ne 400; $index++) {
+    New-Object -TypeName PSCustomObject -Property @{
+        IndexNumber = $Index
+        Attribute = $com.GetDetailsOf($com,$index)
+    } | Where-Object {$_.IndexNumber}
+} 
+
+}
 
 function Get-Images {
 <# 
@@ -81,7 +93,7 @@ function Get-Images {
         [ValidateScript({ (Test-Path -Path $_) })]
         [String[]]$Source, 
     [Parameter(Mandatory=$false, Position=1)]
-        [String[]]$Extension = @('.jpg','.gif')
+        [String[]]$Extension = @('.jpg','.gif','.jpeg','.png')
     )
 
      
@@ -102,14 +114,42 @@ function Get-Images {
     Write-Verbose "Got '$($Folders.Count)' folder(s) in $($Duration.Minutes):$($Duration.Seconds) mm:ss"
     $Folders += $Source
 
+## Brute force file attribute code, not needed
+	# $winver = [System.Environment]::OSVersion.Version
+	# $attrib_ext = 157
+	# $attrib_bitd = 167
+	# $attrib_hres = 168
+	# $attrib_vres = 170
+	# $attrib_width = 169
+	# $attrib_height = 171
+	
+	# if ($winver.major -eq 10 -and $winver.build -ge 16299) {
+		# $attrib_ext = 159
+		# $attrib_bitd = 169
+		# $attrib_hres = 170
+		# $attrib_vres = 172
+		# $attrib_width = 171
+		# $attrib_height = 173
+		# }
+		
+## Setting File Object Attributes, these seem to vary between OS versions - TW
+$names = @("file extension","bit depth","horizontal resolution","vertical resolution","width","height")
+$attribs = Get-Attributes | where {$_.Attribute -in $names} | sort IndexNumber
+$attrib_ext = $attribs[0].IndexNumber
+$attrib_bitd = $attribs[1].IndexNumber
+$attrib_hres = $attribs[2].IndexNumber
+$attrib_width = $attribs[3].IndexNumber
+$attrib_vres = $attribs[4].IndexNumber
+$attrib_height = $attribs[5].IndexNumber
+
     $Images = @()
     $objShell  = New-Object -ComObject Shell.Application
     $Folders | % {
 
         $objFolder = $objShell.namespace($_)
         foreach ($File in $objFolder.items()) { 
-
-            if ($objFolder.getDetailsOf($File, 157) -in $Extension) {
+			
+            if ($objFolder.getDetailsOf($File, $attrib_ext) -in $Extension) {
 
                 Write-Verbose "Processing file '$($File.Path)'"
                 $Props = [ordered]@{
@@ -117,18 +157,18 @@ function Get-Images {
                     FullName      = $File.Path
                     Size          = $File.Size
                     Type          = $File.Type
-                    Extension     = $objFolder.getDetailsOf($File,157)
+                    Extension     = $objFolder.getDetailsOf($File,$attrib_ext)
                     DateCreated   = $objFolder.getDetailsOf($File,4)
                     DateModified  = $objFolder.getDetailsOf($File,3)
                     DateAccessed  = $objFolder.getDetailsOf($File,5)
                     DateTaken     = $objFolder.getDetailsOf($File,12)
                     CameraModel   = $objFolder.getDetailsOf($File,30)
                     CameraMaker   = $objFolder.getDetailsOf($File,32)
-                    BitDepth      = [int]$objFolder.getDetailsOf($File,167)
-                    HorizontalRes = $objFolder.getDetailsOf($File,168)
-                    VerticalRes   = $objFolder.getDetailsOf($File,170)
-                    Width         = $objFolder.getDetailsOf($File,169)
-                    Height        = $objFolder.getDetailsOf($File,171)
+                    BitDepth      = [int]$objFolder.getDetailsOf($File,$attrib_bitd)
+                    HorizontalRes = $objFolder.getDetailsOf($File,$attrib_hres)
+                    VerticalRes   = $objFolder.getDetailsOf($File,$attrib_vres)
+                    Width         = $objFolder.getDetailsOf($File,$attrib_width)
+                    Height        = $objFolder.getDetailsOf($File,$attrib_height)
                 }
                 $Images += New-Object -TypeName psobject -Property $Props
 
