@@ -8,7 +8,7 @@ The script has not been sanitized or desgined for public consumption, modificati
 
 Usage:
 
-If no arguments are used, the script will use all hardcoded paths defined internally. If a path argument ($arg[0]) is provided, this will replace the $tmp variable inside the script. There are no current provisions for providing other paths as command line arguments.
+If no parameters are used, the script will use all hardcoded paths defined internally. If a -Directory parameter is provided, this will replace the $tmp variable inside the script. There are no current provisions for providing other paths as command line arguments.
 
 Requires:
 
