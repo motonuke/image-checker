@@ -84,6 +84,11 @@ function Get-Images {
  .NOTES
   Script by Sam Boutros
   v1.0 - 1/11/2015
+  
+  Modified by Motonuke
+  -Added more default file extensions
+  -File attributes are automatically detected and set, no longer hard coded based on OS. Legacy code still intact for reference.
+  31-Jan-2019
 
 #>
 
